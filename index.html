@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Ratios & Ratings - Top 50</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-top: 20px;
+        }
+        .card-container {
+            display: block;
+            padding: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 900px;
+            margin: 10px auto;
+            transition: transform 0.5s ease-in-out;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #848ddf;
+            color: white;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        tr:hover td {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Financial Ratios & Ratings - Top 50</h1>
+    <div class="card-container" id="card-container">
+        <!-- Dynamic content will be injected here -->
+    </div>
+
+    <script>
+        // Load the JSON file and render the data
+        fetch('final_results.json') // Path to your JSON file
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const container = document.getElementById('card-container');
+                Object.keys(data).forEach(ticker => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+
+                    const title = document.createElement('h2');
+                    title.textContent = ticker;
+                    card.appendChild(title);
+
+                    const table = document.createElement('table');
+                    const thead = document.createElement('thead');
+                    thead.innerHTML = `
+                        <tr>
+                            <th>Ratio</th>
+                            <th>Value</th>
+                            <th>Rating</th>
+                        </tr>
+                    `;
+                    table.appendChild(thead);
+
+                    const tbody = document.createElement('tbody');
+                    data[ticker].forEach(ratio => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${ratio[0]}</td>
+                            <td>${ratio[1]}</td>
+                            <td>${ratio[2]}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    table.appendChild(tbody);
+
+                    card.appendChild(table);
+                    container.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading the JSON file:', error);
+            });
+    </script>
+</body>
+</html>
